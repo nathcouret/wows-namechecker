@@ -1,6 +1,6 @@
 package eu.ncouret.wows.namecheckers.repository
 
-import eu.ncouret.wows.namecheckers.model.Player
+import eu.ncouret.wows.wg.api.model.Player
 import org.slf4j.LoggerFactory
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate
 import org.springframework.stereotype.Repository

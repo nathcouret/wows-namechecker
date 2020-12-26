@@ -7,6 +7,7 @@ plugins {
     id("org.asciidoctor.convert") version "1.5.8"
     kotlin("jvm") version kotlinVersion
     kotlin("plugin.spring") version kotlinVersion
+    id("namecheckers.java-application-conventions")
 }
 
 group = "eu.ncouret.wows"
@@ -21,11 +22,11 @@ repositories {
 val snippetsDir = file("build/generated-snippets")
 val resilience4jVersion = "1.6.1"
 extra["snippetsDir"] = snippetsDir
-extra["springCloudVersion"] = "Hoxton.SR8"
 extra["testcontainersVersion"] = "1.14.3"
 
 
 dependencies {
+    implementation(project(":wg-api-client"))
 
     implementation("org.springframework.boot:spring-boot-starter-batch")
     implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
@@ -85,4 +86,8 @@ tasks.test {
 tasks.asciidoctor {
     inputs.dir(snippetsDir)
     dependsOn(tasks.test)
+}
+
+application {
+    mainClass.set("eu.ncouret.wows.namecheckers.NamecheckersApplicationKt")
 }
