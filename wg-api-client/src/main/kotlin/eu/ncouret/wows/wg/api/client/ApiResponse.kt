@@ -7,12 +7,16 @@ data class ApiResponse(
         val status: String,
         val meta: ApiMetadata?,
         val data: JsonNode?,
-        val error: Error?,
-)
+        val error: ApiError?,
+) {
+    constructor(status: String, error: ApiError?) : this(status, null, null, error)
+}
 
-data class Error(
+data class ApiError(
         val field: String?,
         val code: Int,
         val message: String,
         val value: String?,
-)
+) {
+    constructor(code: Int, message: String) : this(null, code, message, null)
+}

@@ -1,0 +1,28 @@
+api:
+  key: ""
+  url: "https://api.worldofwarships.eu/wows/"
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        slidingWindowSize: 100
+        permittedNumberOfCallsInHalfOpenState: 10
+        waitDurationInOpenState: 10000
+        failureRateThreshold: 60
+        eventConsumerBufferSize: 10
+        registerHealthIndicator: true
+    instances:
+      wg:
+        baseConfig: default
+  ratelimiter:
+    configs:
+      default:
+        limitForPeriod: 10
+        limitRefreshPeriod: 1s
+        timeoutDuration: 1s
+        registerHealthIndicator: true
+        eventConsumerBufferSize: 100
+    instances:
+      wg:
+        baseConfig: default

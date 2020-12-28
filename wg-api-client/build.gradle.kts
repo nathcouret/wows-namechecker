@@ -41,11 +41,26 @@ dependencies {
     implementation("io.github.resilience4j:resilience4j-cache:$resilience4jVersion")
     implementation("io.github.resilience4j:resilience4j-timelimiter:$resilience4jVersion")
 
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+
+}
+
+tasks.compileJava {
+    this.inputs.files(tasks.processResources)
 }
 
 tasks.withType<KotlinCompile> {
+    this.inputs.files(tasks.processResources)
     kotlinOptions {
         freeCompilerArgs = listOf("-Xjsr305=strict")
         jvmTarget = "14"
     }
+}
+
+tasks.bootJar {
+    enabled = false
+}
+
+tasks.jar {
+    enabled = true
 }

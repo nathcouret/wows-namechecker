@@ -5,12 +5,15 @@ import eu.ncouret.wows.wg.api.model.ApiData
 import eu.ncouret.wows.wg.api.model.EnumValue
 import eu.ncouret.wows.wg.api.model.ListApiResponse
 import eu.ncouret.wows.wg.api.model.MapApiResponse
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter
+import kotlinx.coroutines.reactive.awaitFirst
 import org.slf4j.LoggerFactory
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
-import org.springframework.web.reactive.function.client.awaitBody
-
+import org.springframework.web.reactive.function.client.WebClientResponseException
+import reactor.core.publisher.Mono
 
 @Service
 class WargamingApiClient(
@@ -27,17 +30,29 @@ class WargamingApiClient(
     suspend fun sendQuery(
             url: String,
             parameters: Map<String, Any?>
-    ): ApiResponse =
-            client.get().uri { builder ->
-                builder.path(url)
-                builder.queryParam("application_id", apiProperties.key)
-                normalizeParams(parameters).forEach { builder.queryParam(it.key, it.value) }
-                val uri = builder.build()
-                logger.debug("Querying $uri")
-                uri
-            }.accept(MediaType.APPLICATION_JSON)
-                    .retrieve()
-                    .awaitBody()
+    ): ApiResponse = doSendQuery(url, parameters).awaitFirst()
+
+    @RateLimiter(name = "wg")
+    @CircuitBreaker(name = "wg", fallbackMethod = "fallback")
+    fun doSendQuery(
+            url: String,
+            parameters: Map<String, Any?>
+    ): Mono<ApiResponse> = client.get().uri { builder ->
+        builder.path(url)
+        builder.queryParam("application_id", apiProperties.key)
+        normalizeParams(parameters).forEach { builder.queryParam(it.key, it.value) }
+        val uri = builder.build()
+        logger.debug("Querying $uri")
+        uri
+    }.accept(MediaType.APPLICATION_JSON)
+            .retrieve()
+            .bodyToMono(ApiResponse::
+            class.java)
+
+    fun fallback(url: String, parameters: Map<String, Any?>, error: WebClientResponseException): Mono<ApiResponse> {
+        val apiError = ApiError(error.statusCode.value(), error.localizedMessage)
+        return Mono.just(ApiResponse("error", apiError))
+    }
 
     private fun normalizeParams(rawParams: Map<String, Any?>): Map<String, String> {
         val params = mutableMapOf<String, String>()

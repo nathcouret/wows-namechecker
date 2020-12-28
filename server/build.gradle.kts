@@ -40,6 +40,8 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactive")
     implementation("org.liquibase:liquibase-core:4.2.2")
     implementation("io.github.resilience4j:resilience4j-spring-boot2:${resilience4jVersion}")
     implementation("io.github.resilience4j:resilience4j-circuitbreaker:$resilience4jVersion")

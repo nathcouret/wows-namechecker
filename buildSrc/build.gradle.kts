@@ -6,3 +6,6 @@ plugins {
 repositories {
     gradlePluginPortal()
 }
+dependencies {
+    implementation(kotlin("script-runtime"))
+}
