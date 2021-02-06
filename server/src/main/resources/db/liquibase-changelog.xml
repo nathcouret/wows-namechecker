@@ -6,7 +6,7 @@
 	  http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
     <changeSet id="1" author="ncouret">
         <createTable tableName="player">
-            <column name="id" type="varchar(255)">
+            <column name="account_id" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
             <column name="name" type="varchar(255)">
@@ -15,6 +15,25 @@
             <column name="first_seen" type="datetime">
             </column>
         </createTable>
-        <addPrimaryKey tableName="player" columnNames="id,name" constraintName="pk_player_id_name"/>
+        <addPrimaryKey tableName="player" columnNames="account_id,name" constraintName="pk_player_id_name"/>
+    </changeSet>
+    <changeSet id="2" author="ncouret">
+        <addColumn tableName="player">
+            <column name="updated_at" type="datetime">
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet id="3" author="ncouret">
+        <dropPrimaryKey tableName="player" constraintName="pk_player_id_name"/>
+    </changeSet>
+    <changeSet id="4" author="ncouret">
+        <addColumn tableName="player">
+            <column name="id" type="uuid"/>
+        </addColumn>
+        <addPrimaryKey tableName="player" columnNames="id" constraintName="pk_player_id"/>
+    </changeSet>
+    <changeSet id="5" author="ncouret" dbms="postgresql">
+        <addDefaultValue tableName="player" columnName="id" defaultValueComputed="uuid_generate_v4()"
+                         defaultValueConstraintName="default_player_id"/>
     </changeSet>
 </databaseChangeLog>
