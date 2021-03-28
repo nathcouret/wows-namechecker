@@ -1,14 +1,14 @@
 {
   "properties": [
     {
-      "name": "api.url",
+      "name": "wg.api.url",
       "type": "java.lang.String",
-      "description": "Description for api.url."
+      "description": "Base url for the WG API."
     },
     {
-      "name": "api.key",
+      "name": "wg.api.key",
       "type": "java.lang.String",
-      "description": "Description for api.url."
+      "description": "API key to authenticate to the WG API."
     }
   ]
 }

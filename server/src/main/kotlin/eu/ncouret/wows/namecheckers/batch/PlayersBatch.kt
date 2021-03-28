@@ -1,7 +1,7 @@
 package eu.ncouret.wows.namecheckers.batch
 
 import eu.ncouret.wows.namecheckers.business.PlayersBusiness
-import eu.ncouret.wows.wg.api.model.Player
+import eu.ncouret.wows.namecheckers.model.Player
 import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value

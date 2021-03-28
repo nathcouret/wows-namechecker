@@ -1,6 +1,6 @@
 package eu.ncouret.wows.namecheckers.repository
 
-import eu.ncouret.wows.wg.api.model.Player
+import eu.ncouret.wows.namecheckers.model.Player
 import org.springframework.data.r2dbc.repository.Query
 import org.springframework.data.repository.reactive.ReactiveCrudRepository
 import org.springframework.stereotype.Repository

@@ -15,17 +15,19 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder
 import org.springframework.web.reactive.function.client.WebClient
 
 @Configuration
-@EnableConfigurationProperties(ApiProperties::class)
+@EnableConfigurationProperties(WgApiProperties::class)
 @AutoConfigureOrder(Ordered.HIGHEST_PRECEDENCE)
 class WgApiClientConfiguration {
 
     @Bean
-    fun wgWebClient(apiProperties: ApiProperties): WebClient = WebClient.builder()
-            .baseUrl(apiProperties.url)
-            .defaultUriVariables(mapOf(Pair("application_id", apiProperties.key)))
+    @ConditionalOnMissingBean
+    fun wgWebClient(wgApiProperties: WgApiProperties): WebClient = WebClient.builder()
+            .baseUrl(wgApiProperties.url)
+            .defaultUriVariables(mapOf(Pair("application_id", wgApiProperties.key)))
             .build()
 
     @Bean
+    @ConditionalOnMissingBean
     fun wgJacksonBuilder(): Jackson2ObjectMapperBuilder {
         val builder = Jackson2ObjectMapperBuilder()
         builder.propertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE)
@@ -35,16 +37,20 @@ class WgApiClientConfiguration {
     }
 
     @Bean
-    fun objectMapper(@Qualifier("wgJacksonBuilder") builder: Jackson2ObjectMapperBuilder): ObjectMapper {
+    @ConditionalOnMissingBean
+    fun wgObjectMapper(@Qualifier("wgJacksonBuilder") builder: Jackson2ObjectMapperBuilder): ObjectMapper {
         return builder.build()
     }
 
     @Bean
     @ConditionalOnMissingBean
-    fun responseMapper(mapper: ObjectMapper): ResponseMapper = ResponseMapper(mapper)
+    fun wgResponseMapper(@Qualifier("wgObjectMapper") mapper: ObjectMapper): ResponseMapper = ResponseMapper(mapper)
 
     @Bean
     @ConditionalOnMissingBean
-    fun wargamingApiClient(apiProperties: ApiProperties, @Qualifier("wgWebClient") webClient: WebClient, responseMapper: ResponseMapper): WargamingApiClient =
-            WargamingApiClient(apiProperties, webClient, responseMapper)
+    fun wargamingApiClient(
+            wgApiProperties: WgApiProperties,
+            @Qualifier("wgWebClient") webClient: WebClient,
+            @Qualifier("wgResponseMapper") responseMapper: ResponseMapper
+    ): WargamingApiClient = WargamingApiClient(wgApiProperties, webClient, responseMapper)
 }

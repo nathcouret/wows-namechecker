@@ -1,9 +1,7 @@
 package eu.ncouret.wows.wg.api.model.request.account
 
-import eu.ncouret.wows.wg.api.model.Language
+import eu.ncouret.wows.wg.api.model.ApiRequest
 
 data class PlayerInfoParameters(
-    val accountId: String,
-    val fields: List<String>? = listOf(),
-    val language: Language? = Language.EN
-)
+        val accountId: String,
+) : ApiRequest()

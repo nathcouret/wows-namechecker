@@ -1,10 +1,10 @@
 package eu.ncouret.wows.namecheckers.business
 
+import eu.ncouret.wows.namecheckers.model.Player
 import eu.ncouret.wows.namecheckers.repository.PlayerRepository
 import eu.ncouret.wows.wg.api.client.WargamingApiClient
 import eu.ncouret.wows.wg.api.client.fetchDictionary
 import eu.ncouret.wows.wg.api.client.fetchList
-import eu.ncouret.wows.wg.api.model.Player
 import eu.ncouret.wows.wg.api.model.response.account.PlayerInfoResponse
 import eu.ncouret.wows.wg.api.model.response.account.PlayerSearchResponse
 import org.slf4j.LoggerFactory
